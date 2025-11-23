@@ -1,0 +1,39 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Layout title="Blog - Jinwoo Lee" description="Technical blog and thoughts">
+	<section>
+        <h1 class="text-3xl font-bold mb-8">Blog</h1>
+		<ul class="space-y-8">
+			{
+				posts.map((post) => (
+					<li class="group">
+						<a href={`/blog/${post.slug}/`} class="block">
+                            <div class="flex flex-col sm:flex-row gap-4 sm:items-baseline">
+                                <time datetime={post.data.pubDate.toISOString()} class="text-sm text-gray-500 w-32 shrink-0">
+                                    {post.data.pubDate.toLocaleDateString('en-us', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                    })}
+                                </time>
+                                <div>
+                                    <h2 class="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        {post.data.title}
+                                    </h2>
+                                    <p class="text-gray-600 mt-1 line-clamp-2">{post.data.description}</p>
+                                </div>
+                            </div>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</Layout>
