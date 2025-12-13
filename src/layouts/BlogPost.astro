@@ -1,12 +1,17 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
-type Props = CollectionEntry<'blog'>['data'];
+import type { MarkdownHeading } from "astro";
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+type Props = CollectionEntry<"blog">["data"] & {
+	headings: MarkdownHeading[];
+};
+
+const { title, description, pubDate, updatedDate, heroImage, headings, tags } =
+	Astro.props;
 ---
 
 <html lang="en" class="h-full">
@@ -16,37 +21,103 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
 	<body class="h-full flex flex-col bg-white text-gray-900 antialiased">
 		<Header />
-		<main class="flex-1 w-full max-w-4xl mx-auto px-4 py-8">
-			<article class="prose prose-lg prose-blue mx-auto">
-				<div class="mb-8 text-center">
-					{heroImage && <img width={1020} height={510} src={heroImage} alt="" class="rounded-xl shadow-lg mb-6" />}
-					<div class="text-gray-500 mb-2">
-                        <time datetime={pubDate.toISOString()}>
-                            {pubDate.toLocaleDateString('en-us', {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                            })}
-                        </time>
+		<main class="w-full max-w-3xl mx-auto px-4 py-8 relative">
+			<article class="prose prose-lg prose-blue w-full">
+				<div class="mb-12 text-center">
+					<div
+						class="text-gray-500 mb-4 text-sm font-medium tracking-wide uppercase"
+					>
+						<time datetime={pubDate.toISOString()}>
+							{
+								pubDate.toLocaleDateString("en-us", {
+									year: "numeric",
+									month: "short",
+									day: "numeric",
+								})
+							}
+						</time>
 						{
 							updatedDate && (
-								<div class="italic">
-									Last updated on <time datetime={updatedDate.toISOString()}>
-                                        {updatedDate.toLocaleDateString('en-us', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric',
-                                        })}
-                                    </time>
-								</div>
+								<span class="ml-2 pl-2 border-l border-gray-300 italic normal-case tracking-normal text-gray-400">
+									Updated:{" "}
+									<time datetime={updatedDate.toISOString()}>
+										{updatedDate.toLocaleDateString(
+											"en-us",
+											{
+												year: "numeric",
+												month: "short",
+												day: "numeric",
+											},
+										)}
+									</time>
+								</span>
 							)
 						}
 					</div>
-					<h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-4">{title}</h1>
-					<hr class="border-gray-200" />
+					<h1
+						class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl mb-6 leading-tight"
+					>
+						{title}
+					</h1>
+					{
+						tags && (
+							<div class="flex flex-wrap justify-center gap-2 mb-8">
+								{tags.map((tag: string) => (
+									<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors cursor-default">
+										#{tag}
+									</span>
+								))}
+							</div>
+						)
+					}
+					{
+						heroImage && (
+							<img
+								width={1020}
+								height={510}
+								src={heroImage}
+								alt=""
+								class="rounded-xl shadow-lg w-full object-cover aspect-[2/1]"
+							/>
+						)
+					}
 				</div>
 				<slot />
 			</article>
+			<aside
+				class="hidden xl:block absolute left-full top-0 ml-16 h-full"
+			>
+				<div class="sticky top-24 w-64">
+					<h2
+						class="font-bold text-gray-900 mb-4 text-xs uppercase tracking-wider text-gray-400"
+					>
+						On This Page
+					</h2>
+					<ul class="space-y-3 text-sm border-l border-gray-200">
+						{
+							headings.map((heading) => (
+								<li
+									class={`
+                                ${heading.depth === 1 ? "pl-4 text-sm font-semibold text-gray-900" : ""}
+                                ${heading.depth === 2 ? "pl-6 text-sm" : ""}
+                                ${heading.depth === 3 ? "pl-10 text-xs" : ""}
+                                ${heading.depth > 3 ? "pl-12 text-xs" : ""}
+                            `}
+								>
+									<a
+										href={`#${heading.slug}`}
+										class={`block transition-colors duration-200 leading-snug
+                                            ${heading.depth <= 2 ? "text-gray-700 hover:text-gray-900 group-hover:text-blue-600" : "text-gray-500 hover:text-gray-800"}
+                                        `}
+									>
+										{heading.text}
+									</a>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			</aside>
 		</main>
 		<Footer />
 	</body>
