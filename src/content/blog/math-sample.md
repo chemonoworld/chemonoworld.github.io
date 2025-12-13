@@ -1,5 +1,5 @@
 ---
-title: 'Math Support with LaTeX'
+title: 'Math Support test with LaTeX'
 description: 'Testing LaTeX rendering in Astro using remark-math and rehype-katex'
 pubDate: 'Jul 08 2022'
 heroImage: '/blog-placeholder-1.jpg'
