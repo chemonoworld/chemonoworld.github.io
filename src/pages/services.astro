@@ -1,0 +1,80 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
+
+const products = [
+    {
+        title: "Bech32 Converter",
+        description:
+            "A versatile tool to convert between Bech32 address formats across various networks. Supports seamless conversion including Hex, Hex Pubkey, and Hex Address formats.",
+        link: "https://bech32converter.com",
+        tags: ["Blockchain", "Tool", "Converter"],
+    },
+];
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead
+            title={`Services | ${SITE_TITLE}`}
+            description={SITE_DESCRIPTION}
+        />
+    </head>
+    <body>
+        <Header />
+        <main class="w-full max-w-4xl mx-auto px-4 py-8">
+            <div class="mb-12 text-center">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Services</h1>
+                <p class="text-lg text-gray-600">
+                    Projects and services built & operated by @chemonoworld.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {
+                    products.map((product) => (
+                        <a
+                            href={product.link}
+                            target="_blank"
+                            class="group block p-6 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-blue-500 transition-all duration-300"
+                        >
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                                    {product.title}
+                                </h3>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                                    />
+                                </svg>
+                            </div>
+                            <p class="text-gray-600 mb-6 leading-relaxed">
+                                {product.description}
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                {product.tags.map((tag) => (
+                                    <span class="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 rounded-full">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </a>
+                    ))
+                }
+            </div>
+        </main>
+        <Footer />
+    </body>
+</html>
