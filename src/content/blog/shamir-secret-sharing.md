@@ -5,13 +5,13 @@ pubDate: 'Oct 24 2024'
 tags: ['cryptography', 'algorithm', 'math', 'golang']
 ---
 
-*Original presentation by Jinwoo on Oct 24, 2024*
+*Original presentation by Jinwoo Lee on Oct 24, 2024*
 
 ## SSS란?
 
-- **Secret Key**를 안전하게 공유하고 복구하는 방법입니다.
-- **$n$**명의 사람에게 키를 나눠줍니다. (Threshold **$k$**, $k \le n$)
-- $n$개의 키를 나눠 갖고 **$k$ ($k \le n$)**개 이상의 키가 모였을 때 원래의 Secret Key를 복구할 수 있는 알고리즘을 의미합니다.
+- <strong>Secret Key</strong>를 안전하게 공유하고 복구하는 방법입니다.
+- <strong>$n$</strong>명의 사람에게 키를 나눠줍니다. (Threshold <strong>$k$</strong>, $k \le n$)
+- $n$개의 키를 나눠 갖고 <strong>$k$ ($k \le n$)</strong>개 이상의 키가 모였을 때 원래의 Secret Key를 복구할 수 있는 알고리즘을 의미합니다.
 - Multisig와 유사한 점이 있으므로 비유하자면, $n$을 전체 멀티시그 참여자 수, $k$를 Threshold라고 생각하면 이해하기 쉽습니다.
 
 ---
@@ -22,11 +22,11 @@ tags: ['cryptography', 'algorithm', 'math', 'golang']
 
 ### 다항식(Polynomial) 및 $(k-1)$차 방정식 해의 성질
 
-- **0차 함수**는 1개의 점에 대한 정보가 있으면 그래프를 얻어낼 수 있습니다. (ex. $y = 5$)
-- **1차 함수**는 2개의 점에 대한 정보가 있으면 그래프를 알아낼 수 있습니다.
+- <strong>0차 함수</strong>는 1개의 점에 대한 정보가 있으면 그래프를 얻어낼 수 있습니다. (ex. $y = 5$)
+- <strong>1차 함수</strong>는 2개의 점에 대한 정보가 있으면 그래프를 알아낼 수 있습니다.
     - ex. $y = 2x - 1$
     - $(1,1), (0,-1)$ 두 점이 주어졌을 때 기울기는 2이므로, $y -(-1) = 2(x-0) \rightarrow y = 2x - 1$
-- **$(k-1)$차 함수**는..?
+- <strong>$(k-1)$차 함수</strong>는..?
     - **$k$개의 점이 필요합니다.**
 
     $$
@@ -34,10 +34,10 @@ tags: ['cryptography', 'algorithm', 'math', 'golang']
     $$
 
 - $(x_i, y_i)$ 쌍이 $k$개 존재하고 이를 모두 대입하면, 중학교 1학년 수준의 미지수가 $k$개인 연립 일차 방정식이 됨을 알 수 있습니다. (미지수가 $a_i$가 되므로)
-- 따라서 미지수가 $k$개인 연립 일차 방정식은 서로 **Linearly Independent**한 $k$개의 방정식이 주어져야 하므로, 서로 다른 $k$개의 점이 필요함을 알 수 있습니다.
+- 따라서 미지수가 $k$개인 연립 일차 방정식은 서로 <strong>Linearly Independent</strong>한 $k$개의 방정식이 주어져야 하므로, 서로 다른 $k$개의 점이 필요함을 알 수 있습니다.
 
 > **Q**: 그러면 $k$개 이상의 점이 있어도 되나?
-> **A**: 네. 위 조건들은 필요한 **최소 개수**입니다. ($k \le n$)
+> **A**: 네. 위 조건들은 필요한 <strong>최소 개수</strong>입니다. ($k \le n$)
 
 ### 1. Polynomial
 
@@ -53,7 +53,7 @@ $$
 
 ### 2. Secret Key
 
-임의의 $a_0 \sim a_{k-1}$을 설정하고, 이때 **$a_0$가 비밀키(Secret Key)**가 됩니다.
+임의의 $a_0 \sim a_{k-1}$을 설정하고, 이때 <strong>$a_0$가 비밀키(Secret Key)</strong>가 됩니다.
 
 $$
 \text{Secret Key} = a_0
@@ -69,7 +69,7 @@ $$
     (x_1, y_1), ..., (x_n, y_n) \quad (\text{where } n \ge k)
     $$
 
-    그리고 이것을 **$n$명에게 1개씩 공유**합니다.
+    그리고 이것을 <strong>$n$명에게 1개씩 공유</strong>합니다.
 
 - 이때 $n$은 반드시 $k$개보다 같거나 커야 합니다.
     - 그래야 복구가 가능하기 때문입니다.
@@ -100,7 +100,7 @@ f(x) = \sum_{j=0}^{k-1} y_j \left(\frac{x-x_0}{x_j-x_0}\right) \left(\frac{x-x_1
 $$
 
 - $f(x)$를 구한 다음에는?
-    - $x = 0$을 대입하여 원래 **Secret Key**를 복구할 수 있습니다.
+    - $x = 0$을 대입하여 원래 <strong>Secret Key</strong>를 복구할 수 있습니다.
 
 $$
 f(0) = a_0
@@ -111,7 +111,7 @@ $$
 ## 유한체 (Finite Field)
 
 위의 다항식 원리는 유한체 위에서도 잘 정의됩니다.
-왜냐하면 $(k-1)$차 다항식은 유한체 $F$에 대한 차원이 $k$인 **벡터 공간 $V$ (Finite Dimension Vector Space)**로 정의할 수 있기 때문입니다.
+왜냐하면 $(k-1)$차 다항식은 유한체 $F$에 대한 차원이 $k$인 <strong>벡터 공간 $V$ (Finite Dimension Vector Space)</strong>로 정의할 수 있기 때문입니다.
 
 ### 1. 성질
 유한체는 다음과 같은 성질을 가지고 있습니다:
@@ -276,16 +276,16 @@ func LagrangeInterpolation(shares []SecretShare, prime *big.Int) *big.Int {
     \{(x_0, y_0), (x_1, y_1), ..., (x_{k-1}, y_{k-1})\}
     $$
 
-2. **라그랑주 기본 다항식 (Lagrange Basis Polynomial)**을 다음과 같이 정의합시다.
+2. <strong>라그랑주 기본 다항식 (Lagrange Basis Polynomial)</strong>을 다음과 같이 정의합시다.
 
     $$
     p_j(x) = \prod_{i\neq j}^{k-1} \frac{x-x_i}{x_j-x_i}
     $$
 
 3. 이 다항식들은 다음과 같은 성질을 가집니다.
-    - **Linearly Independent**합니다.
-    - **Span**합니다.
-    - 따라서 $P_{k-1}$ ($(k-1)$차 이하 다항식의 벡터 공간)의 **Basis**가 됩니다.
+    - <strong>Linearly Independent</strong>합니다.
+    - <strong>Span</strong>합니다.
+    - 따라서 $P_{k-1}$ ($(k-1)$차 이하 다항식의 벡터 공간)의 <strong>Basis</strong>가 됩니다.
 
 4. $x = x_i$를 대입하는 것은 Linear Functional $L_i$에 대응되며, 다음과 같은 성질을 지닙니다 (Kronecker Delta).
 

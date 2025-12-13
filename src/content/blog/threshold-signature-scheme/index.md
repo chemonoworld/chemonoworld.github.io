@@ -5,7 +5,7 @@ pubDate: 'Nov 07 2024'
 tags: ['cryptography', 'blockchain', 'mpc', 'tss', 'math']
 ---
 
-*Original presentation by Jinwoo on Nov 7, 2024*
+*Original presentation by Jinwoo Lee on Nov 7, 2024*
 
 ## 1. Elliptic Curve over Finite Field
 
@@ -37,10 +37,10 @@ $$
 
 #### 정의
 
-- 군 $G$가 하나의 원소 $g$로부터 생성될 수 있을 때 **순환군**이라고 합니다.
+- 군 $G$가 하나의 원소 $g$로부터 생성될 수 있을 때 <strong>순환군</strong>이라고 합니다.
   $$G = \langle g \rangle = \{g^n \mid n \in \mathbb{Z}\}$$
 - $g$: Generator(생성원)
-- 순환군이면 **아벨군(가환군)**입니다. (교환법칙 성립)
+- 순환군이면 <strong>아벨군(가환군)</strong>입니다. (교환법칙 성립)
 
 **Group (군)의 성질**:
 1.  **닫혀있음 (Closure)**: 연산 결과가 항상 군 안에 존재.
@@ -50,7 +50,7 @@ $$
 
 #### Order (위수)
 
-하나의 Base Point로 시작해서 `+` 연산을 계속하다 보면 다시 처음의 Base Point로 돌아오게 됩니다. 이때 처음으로 돌아오는 연산 횟수 $n$을 순환군의 **Order(위수)**라고 부릅니다.
+하나의 Base Point로 시작해서 `+` 연산을 계속하다 보면 다시 처음의 Base Point로 돌아오게 됩니다. 이때 처음으로 돌아오는 연산 횟수 $n$을 순환군의 <strong>Order(위수)</strong>라고 부릅니다.
 
 > **왜 순환군인가?**
 > 유한체에 대한 타원곡선 위의 임의의 점을 Base Point $G$로 잡고 연산을 정의하면 순환군을 이룹니다. 이때 순환군의 위수 $n$은 $p$와 다를 수 있습니다.
@@ -121,7 +121,7 @@ $$
 
 ## 3. TSS (Threshold Signature Scheme)
 
-- **SSS (Shamir Secret Sharing)**: 비밀키를 나눠 갖고, $k$개를 모아 **복구**하여 사용합니다.
+- **SSS (Shamir Secret Sharing)**: 비밀키를 나눠 갖고, $k$개를 모아 <strong>복구</strong>하여 사용합니다.
     - **단점**: 복구 시점에 Single Point of Failure가 발생합니다.
 
 - **TSS**: 키를 나눠 가진 상태에서, **비밀키 복구 없이** 각자 부분 서명(Partial Signature)을 생성하고, 이를 합쳐 완성된 서명을 만듭니다.

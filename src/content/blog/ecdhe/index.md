@@ -11,7 +11,7 @@ tags: ['cryptography', 'ecdhe', 'aes-gcm', 'web3auth', 'mpc']
 
 ### 기본적인 컨셉
 
-Alice와 Bob이 각각 Key Pair를 생성하고 **키 교환(Key Exchange)**을 통해 둘만 아는 (대칭)암호화 키를 만들어 비밀 커뮤니케이션 채널을 만드는 것입니다. VPN이나 HTTPS(TLS)에 활용됩니다.
+Alice와 Bob이 각각 Key Pair를 생성하고 <strong>키 교환(Key Exchange)</strong>을 통해 둘만 아는 (대칭)암호화 키를 만들어 비밀 커뮤니케이션 채널을 만드는 것입니다. VPN이나 HTTPS(TLS)에 활용됩니다.
 
 ![ECDHE Process](./image.png)
 
@@ -65,7 +65,7 @@ Alice와 Bob이 각각 Key Pair를 생성하고 **키 교환(Key Exchange)**을 
 
 ### 2.1. 커밋(Commit) 단계
 
-- 사용자는 어떤 값을 **숨긴 채 커밋(Commit)**합니다.
+- 사용자는 어떤 값을 <strong>숨긴 채 커밋(Commit)</strong>합니다.
 - 해시나 암호화 기법을 사용하여, **내용은 숨기되 변경은 못 하게(Binding)** 합니다.
 
 ```text
@@ -77,7 +77,7 @@ commitment = Hash(value || nonce)
 
 ### 2.2. 리빌(Reveal) 단계
 
-- 이후에 사용자는 `value`와 `nonce`를 **공개(Reveal)**합니다.
+- 이후에 사용자는 `value`와 `nonce`를 <strong>공개(Reveal)</strong>합니다.
 - 다른 사람들은 이를 보고 실제로 커밋한 값이 맞는지 검증합니다.
     - `commitment == Hash(value || nonce)` 확인.
 
@@ -87,7 +87,7 @@ commitment = Hash(value || nonce)
 
 ### 기본적인 컨셉
 
-ECDHE로 유저(Web3Auth SDK)와 Committee 사이에 **세션 키**를 만들고, 이를 통해 Google OAuth Token을 Commit-Reveal Scheme으로 안전하게 Committee에 전달하여 인증합니다.
+ECDHE로 유저(Web3Auth SDK)와 Committee 사이에 <strong>세션 키</strong>를 만들고, 이를 통해 Google OAuth Token을 Commit-Reveal Scheme으로 안전하게 Committee에 전달하여 인증합니다.
 
 - **User ($A$)**: 세션마다 Key Pair 새로 생성 ($sk_a, pk_a$)
 - **Committee 1 ($B$)**: $pk_b$는 공개되어 있음 (인증서 포함)

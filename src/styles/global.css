@@ -1,2 +1,30 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@layer components {
+
+    /* Notion-like Inline Code */
+    .prose :where(code):not(:where([class~="not-prose"] *, pre *)) {
+        color: #EB5757 !important;
+        /* Notion Red */
+        background-color: rgba(135, 131, 120, 0.15) !important;
+        padding: 0.2em 0.4em !important;
+        border-radius: 3px !important;
+        font-weight: normal !important;
+    }
+
+    /* Remove default backticks from typography plugin */
+    .prose :where(code):not(:where([class~="not-prose"] *, pre *))::before {
+        content: "" !important;
+    }
+
+    .prose :where(code):not(:where([class~="not-prose"] *, pre *))::after {
+        content: "" !important;
+    }
+
+    /* Stylize Strong/Bold Text (Optional Enhancement) */
+    .prose strong {
+        font-weight: 700;
+        color: inherit;
+    }
+}
