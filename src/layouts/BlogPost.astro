@@ -93,7 +93,10 @@ const { title, description, pubDate, updatedDate, heroImage, headings, tags } =
 					>
 						On This Page
 					</h2>
-					<ul class="space-y-3 text-sm border-l border-gray-200">
+					<ul
+						class="space-y-3 text-sm border-l border-gray-200"
+						id="toc"
+					>
 						{
 							headings.map((heading) => (
 								<li
@@ -106,9 +109,10 @@ const { title, description, pubDate, updatedDate, heroImage, headings, tags } =
 								>
 									<a
 										href={`#${heading.slug}`}
-										class={`block transition-colors duration-200 leading-snug
-                                            ${heading.depth <= 2 ? "text-gray-700 hover:text-gray-900 group-hover:text-blue-600" : "text-gray-500 hover:text-gray-800"}
+										class={`block transition-colors duration-200 leading-snug toc-link
+                                            ${heading.depth <= 2 ? "text-gray-600 hover:text-gray-900" : "text-gray-500 hover:text-gray-800"}
                                         `}
+										data-slug={heading.slug}
 									>
 										{heading.text}
 									</a>
@@ -120,5 +124,92 @@ const { title, description, pubDate, updatedDate, heroImage, headings, tags } =
 			</aside>
 		</main>
 		<Footer />
+		<script>
+			// ScrollSpy Implementation
+			document.addEventListener("astro:page-load", () => {
+				const observer = new IntersectionObserver(
+					(entries) => {
+						entries.forEach((entry) => {
+							const id = entry.target.getAttribute("id");
+							const link = document.querySelector(
+								`.toc-link[data-slug="${id}"]`,
+							);
+
+							if (entry.isIntersecting) {
+								// Remove active from all
+								document
+									.querySelectorAll(".toc-link")
+									.forEach((l) => {
+										l.classList.remove(
+											"text-blue-600",
+											"font-medium",
+											"border-l-2",
+											"border-blue-600",
+											"-ml-[2px]",
+										);
+										l.classList.add(
+											"text-gray-600",
+											"text-gray-500",
+										); // Reset to default based on depth (simplified)
+										// Restoring original depth-based styling is hard purely with classList,
+										// so we'll rely on the base classes and just add/remove the 'active' overrides.
+									});
+
+								if (link) {
+									link.classList.remove(
+										"text-gray-600",
+										"text-gray-500",
+									);
+									link.classList.add(
+										"text-blue-600",
+										"font-medium",
+									);
+									// Highlight the parent border or the link itself
+									// Since the border is on the UL, we might want to simulate a border on the link or LI
+									// Let's try adding a border to the LI or styling the link to look like it has a border
+								}
+							}
+						});
+					},
+					{
+						rootMargin: "-100px 0px -66% 0px", // Trigger when element is near top
+					},
+				);
+
+				// Track all headings
+				document
+					.querySelectorAll("h1, h2, h3, h4")
+					.forEach((heading) => {
+						observer.observe(heading);
+					});
+			});
+
+			// Handle initial load matching strictly for regular script execution if view transitions aren't used,
+			// but assuming Astro. logic above handles view transitions.
+			// Fallback for non-view-transition loads:
+			window.addEventListener("scroll", () => {
+				const headings = Array.from(
+					document.querySelectorAll(
+						"article h1, article h2, article h3",
+					),
+				);
+				const scrollY = window.scrollY;
+
+				// Find the current heading
+				let current = "";
+				for (const heading of headings) {
+					if ((heading as HTMLElement).offsetTop - 150 <= scrollY) {
+						current = heading.getAttribute("id") || "";
+					}
+				}
+
+				document.querySelectorAll(".toc-link").forEach((link) => {
+					link.classList.remove("text-blue-600", "font-medium");
+					if (link.getAttribute("href") === `#${current}`) {
+						link.classList.add("text-blue-600", "font-medium");
+					}
+				});
+			});
+		</script>
 	</body>
 </html>
