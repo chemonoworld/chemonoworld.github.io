@@ -6,15 +6,46 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 const posts = (await getCollection("blog")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+// Get all unique tags
+const tags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort();
 ---
 
 <Layout title={SITE_TITLE} description={SITE_DESCRIPTION}>
 	<section>
-		<h1 class="text-3xl font-bold mb-8">Posts</h1>
-		<ul class="space-y-8">
+		<div
+			class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"
+		>
+			<h1 class="text-3xl font-bold">Posts</h1>
+
+			<!-- Tag Filter -->
+			<div class="flex flex-wrap gap-2" id="tag-filter">
+				<button
+					class="px-3 py-1 rounded-full text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+					data-tag="all"
+				>
+					All
+				</button>
+				{
+					tags.map((tag) => (
+						<button
+							class="px-3 py-1 rounded-full text-sm font-medium transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer"
+							data-tag={tag}
+						>
+							#{tag}
+						</button>
+					))
+				}
+			</div>
+		</div>
+
+		<ul class="space-y-8" id="post-list">
 			{
 				posts.map((post) => (
-					<li class="group">
+					<li
+						class="group post-item"
+						data-tags={post.data.tags?.join(",") || ""}
+					>
 						<a href={`/blog/${post.slug}/`} class="block">
 							<div class="flex flex-col sm:flex-row gap-4 sm:items-baseline">
 								<time
@@ -30,13 +61,24 @@ const posts = (await getCollection("blog")).sort(
 										},
 									)}
 								</time>
-								<div>
+								<div class="flex-1">
 									<h2 class="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
 										{post.data.title}
 									</h2>
 									<p class="text-gray-600 mt-1 line-clamp-2">
 										{post.data.description}
 									</p>
+									{post.data.tags && (
+										<div class="flex gap-2 mt-2">
+											{post.data.tags.map(
+												(tag: string) => (
+													<span class="text-xs text-gray-400 font-medium">
+														#{tag}
+													</span>
+												),
+											)}
+										</div>
+									)}
 								</div>
 							</div>
 						</a>
@@ -44,5 +86,115 @@ const posts = (await getCollection("blog")).sort(
 				))
 			}
 		</ul>
+
+		<!-- Empty State -->
+		<div id="no-posts" class="hidden text-center py-12 text-gray-500">
+			No posts found with this tag.
+		</div>
 	</section>
 </Layout>
+
+<script>
+	function initTagFilter() {
+		const filterContainer = document.getElementById("tag-filter");
+		const postList = document.getElementById("post-list");
+		const noPosts = document.getElementById("no-posts");
+
+		// Prevent double init if listeners already attached
+		if (
+			!filterContainer ||
+			!postList ||
+			filterContainer.dataset.init === "true"
+		)
+			return;
+		filterContainer.dataset.init = "true";
+
+		const posts = Array.from(postList.children) as HTMLElement[];
+		const buttons = Array.from(
+			filterContainer.children,
+		) as HTMLButtonElement[];
+
+		// Function to filter posts
+		const filterPosts = (tag: string) => {
+			let visibleCount = 0;
+
+			// Update posts visibility
+			posts.forEach((post) => {
+				const postTags = (post.dataset.tags || "").split(",");
+				if (tag === "all" || postTags.includes(tag)) {
+					post.classList.remove("hidden");
+					visibleCount++;
+				} else {
+					post.classList.add("hidden");
+				}
+			});
+
+			// Show/Hide empty state
+			if (noPosts) {
+				noPosts.classList.toggle("hidden", visibleCount === 0);
+			}
+
+			// Update Active State
+			buttons.forEach((btn) => {
+				const isSelected = btn.dataset.tag === tag;
+				if (isSelected) {
+					btn.classList.remove(
+						"bg-gray-100",
+						"text-gray-600",
+						"hover:bg-gray-200",
+					);
+					btn.classList.add(
+						"bg-blue-600",
+						"text-white",
+						"hover:bg-blue-700",
+					);
+				} else {
+					btn.classList.add(
+						"bg-gray-100",
+						"text-gray-600",
+						"hover:bg-gray-200",
+					);
+					btn.classList.remove(
+						"bg-blue-600",
+						"text-white",
+						"hover:bg-blue-700",
+					);
+				}
+			});
+
+			// Update URL
+			const url = new URL(window.location.href);
+			if (tag === "all") {
+				url.searchParams.delete("tag");
+			} else {
+				url.searchParams.set("tag", tag);
+			}
+			window.history.pushState({}, "", url);
+		};
+
+		// Event Listeners
+		buttons.forEach((btn) => {
+			btn.addEventListener("click", () => {
+				const tag = btn.dataset.tag || "all";
+				filterPosts(tag);
+			});
+		});
+
+		// Check URL on load
+		const params = new URLSearchParams(window.location.search);
+		const initialTag = params.get("tag");
+		if (initialTag) {
+			filterPosts(initialTag);
+		}
+	}
+
+	// Run on standard load
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initTagFilter);
+	} else {
+		initTagFilter();
+	}
+
+	// Run on Astro transition (if enabled in future)
+	document.addEventListener("astro:page-load", initTagFilter);
+</script>
