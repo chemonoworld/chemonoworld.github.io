@@ -131,7 +131,7 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort();
 
 			// Show/Hide empty state
 			if (noPosts) {
-				noPosts.classList.toggle("hidden", visibleCount === 0);
+				noPosts.classList.toggle("hidden", visibleCount > 0);
 			}
 
 			// Update Active State
