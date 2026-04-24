@@ -1,5 +1,5 @@
 ---
-title: 'Bay Area 여행 - 1'
+title: 'Bay Area 여행'
 description: '실리콘 밸리 여행 중간 회고 및 여러 생각들'
 pubDate: 2026-02-18
 ---
