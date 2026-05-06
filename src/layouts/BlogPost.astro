@@ -1,17 +1,31 @@
 ---
-import type { CollectionEntry } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
 import type { MarkdownHeading } from "astro";
 
-type Props = CollectionEntry<"blog">["data"] & {
+type Props = {
+	title: string;
+	description: string;
+	pubDate: Date;
+	updatedDate?: Date;
+	heroImage?: string;
+	tags?: string[];
+	category?: string;
 	headings: MarkdownHeading[];
 };
 
-const { title, description, pubDate, updatedDate, heroImage, headings, tags } =
-	Astro.props;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	headings,
+	tags,
+	category,
+} = Astro.props;
 ---
 
 <html lang="en" class="h-full">
@@ -59,6 +73,15 @@ const { title, description, pubDate, updatedDate, heroImage, headings, tags } =
 					>
 						{title}
 					</h1>
+					{
+						category && (
+							<div class="flex justify-center mb-4">
+								<span class="text-xs font-semibold text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
+									{category}
+								</span>
+							</div>
+						)
+					}
 					{
 						tags && (
 							<div class="flex flex-wrap justify-center gap-2 mb-8">

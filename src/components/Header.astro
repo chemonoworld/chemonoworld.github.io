@@ -25,6 +25,12 @@ import { SITE_TITLE } from "../consts";
 					Home
 				</a>
 				<a
+					href="/notes"
+					class={`transition-colors duration-200 ${Astro.url.pathname.startsWith("/notes") ? "text-blue-600" : "text-gray-600 hover:text-gray-900"}`}
+				>
+					Notes
+				</a>
+				<a
 					href="/services"
 					class={`transition-colors duration-200 ${Astro.url.pathname.startsWith("/services") ? "text-blue-600" : "text-gray-600 hover:text-gray-900"}`}
 				>
@@ -121,6 +127,12 @@ import { SITE_TITLE } from "../consts";
 					class={`block py-2 ${Astro.url.pathname === "/" ? "text-blue-600" : "text-gray-600 hover:text-gray-900"}`}
 				>
 					Home
+				</a>
+				<a
+					href="/notes"
+					class={`block py-2 ${Astro.url.pathname.startsWith("/notes") ? "text-blue-600" : "text-gray-600 hover:text-gray-900"}`}
+				>
+					Notes
 				</a>
 				<a
 					href="/services"

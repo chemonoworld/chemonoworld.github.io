@@ -1,0 +1,184 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { SITE_TITLE } from "../../consts";
+
+const notes = (await getCollection("notes")).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const categories = [
+	...new Set(notes.map((note) => note.data.category)),
+].sort();
+---
+
+<Layout title={`Notes | ${SITE_TITLE}`} description="Lightweight TILs, programming tips, snippets, and memos.">
+	<section>
+		<div
+			class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4"
+		>
+			<div>
+				<p class="text-sm font-medium text-blue-600 mb-2">Notes</p>
+				<h1 class="text-3xl font-bold">TIL & Tips</h1>
+				<p class="text-gray-600 mt-2">
+					Short notes separated from long-form posts.
+				</p>
+			</div>
+
+			{
+				categories.length > 0 && (
+					<div class="flex flex-wrap gap-2" id="note-filter">
+						<button
+							class="px-3 py-1 rounded-full text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+							data-category="all"
+						>
+							All
+						</button>
+						{categories.map((category) => (
+							<button
+								class="px-3 py-1 rounded-full text-sm font-medium transition-colors bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer"
+								data-category={category}
+							>
+								{category}
+							</button>
+						))}
+					</div>
+				)
+			}
+		</div>
+
+		<ul class="space-y-6" id="note-list">
+			{
+				notes.map((note) => (
+					<li
+						class="group note-item"
+						data-category={note.data.category}
+					>
+						<a href={`/notes/${note.slug}/`} class="block">
+							<div class="flex flex-col sm:flex-row gap-4 sm:items-baseline">
+								<time
+									datetime={note.data.pubDate.toISOString()}
+									class="text-sm text-gray-500 w-32 shrink-0"
+								>
+									{note.data.pubDate.toLocaleDateString(
+										"en-us",
+										{
+											year: "numeric",
+											month: "short",
+											day: "numeric",
+										},
+									)}
+								</time>
+								<div class="flex-1">
+									<div class="flex flex-wrap items-center gap-2">
+										<span class="text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">
+											{note.data.category}
+										</span>
+										<h2 class="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+											{note.data.title}
+										</h2>
+									</div>
+									<p class="text-gray-600 mt-1 line-clamp-2">
+										{note.data.description}
+									</p>
+									{note.data.tags && (
+										<div class="flex flex-wrap gap-2 mt-2">
+											{note.data.tags.map(
+												(tag: string) => (
+													<span class="text-xs text-gray-400 font-medium">
+														#{tag}
+													</span>
+												),
+											)}
+										</div>
+									)}
+								</div>
+							</div>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+
+		<div id="no-notes" class="hidden text-center py-12 text-gray-500">
+			No notes found in this category.
+		</div>
+	</section>
+</Layout>
+
+<script>
+	function initNoteFilter() {
+		const filterContainer = document.getElementById("note-filter");
+		const noteList = document.getElementById("note-list");
+		const noNotes = document.getElementById("no-notes");
+
+		if (
+			!filterContainer ||
+			!noteList ||
+			filterContainer.dataset.init === "true"
+		)
+			return;
+		filterContainer.dataset.init = "true";
+
+		const notes = Array.from(noteList.children) as HTMLElement[];
+		const buttons = Array.from(
+			filterContainer.children,
+		) as HTMLButtonElement[];
+
+		const filterNotes = (category: string) => {
+			let visibleCount = 0;
+
+			notes.forEach((note) => {
+				if (
+					category === "all" ||
+					note.dataset.category === category
+				) {
+					note.classList.remove("hidden");
+					visibleCount++;
+				} else {
+					note.classList.add("hidden");
+				}
+			});
+
+			noNotes?.classList.toggle("hidden", visibleCount > 0);
+
+			buttons.forEach((btn) => {
+				const isSelected = btn.dataset.category === category;
+				btn.classList.toggle("bg-blue-600", isSelected);
+				btn.classList.toggle("text-white", isSelected);
+				btn.classList.toggle("hover:bg-blue-700", isSelected);
+				btn.classList.toggle("bg-gray-100", !isSelected);
+				btn.classList.toggle("text-gray-600", !isSelected);
+				btn.classList.toggle("hover:bg-gray-200", !isSelected);
+			});
+
+			const url = new URL(window.location.href);
+			if (category === "all") {
+				url.searchParams.delete("category");
+			} else {
+				url.searchParams.set("category", category);
+			}
+			window.history.pushState({}, "", url);
+		};
+
+		buttons.forEach((btn) => {
+			btn.addEventListener("click", () => {
+				filterNotes(btn.dataset.category || "all");
+			});
+		});
+
+		const params = new URLSearchParams(window.location.search);
+		const initialCategory = params.get("category");
+		if (initialCategory) {
+			filterNotes(initialCategory);
+		}
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", initNoteFilter);
+	} else {
+		initNoteFilter();
+	}
+
+	document.addEventListener("astro:page-load", initNoteFilter);
+</script>
