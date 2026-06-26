@@ -1,0 +1,96 @@
+<svg width="960" height="600" viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">DKG participant 2 polynomial</title>
+  <desc id="desc">Participant 2 generates a degree t polynomial with its local secret contribution as the y-intercept and shares evaluated at x1, x2, and x3.</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#243447"/>
+    </marker>
+    <filter id="soft-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#17202a" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="600" fill="#f8fafc"/>
+
+  <g transform="translate(96 70)">
+    <rect x="0" y="0" width="768" height="440" rx="8" fill="#ffffff" stroke="#d8e0ea" filter="url(#soft-shadow)"/>
+
+    <!-- Plot grid -->
+    <g stroke="#e7edf5" stroke-width="1">
+      <path d="M 80 52 V 380"/>
+      <path d="M 220 52 V 380"/>
+      <path d="M 360 52 V 380"/>
+      <path d="M 500 52 V 380"/>
+      <path d="M 640 52 V 380"/>
+      <path d="M 72 320 H 700"/>
+      <path d="M 72 250 H 700"/>
+      <path d="M 72 180 H 700"/>
+      <path d="M 72 110 H 700"/>
+    </g>
+
+    <!-- Axes -->
+    <g stroke="#243447" stroke-width="2.2" fill="none" marker-end="url(#arrow)">
+      <path d="M 80 350 H 704"/>
+      <path d="M 80 350 V 54"/>
+    </g>
+
+    <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fill="#3f4e60">
+      <text x="708" y="357" font-size="17">x</text>
+      <text x="68" y="46" font-size="17">y</text>
+      <text x="209" y="378" font-size="15">x<tspan baseline-shift="sub" font-size="11">1</tspan></text>
+      <text x="349" y="378" font-size="15">x<tspan baseline-shift="sub" font-size="11">2</tspan></text>
+      <text x="489" y="378" font-size="15">x<tspan baseline-shift="sub" font-size="11">3</tspan></text>
+    </g>
+
+    <!-- Polynomial curve: f_2(x) = sum_{j=0}^t c_{2,j} x^j -->
+    <path d="M 80 286 C 130 250, 176 224, 220 220 C 270 216, 314 222, 360 230 C 416 240, 468 248, 500 244 C 570 235, 626 195, 684 156"
+          fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/>
+
+    <!-- Local secret contribution at y-intercept -->
+    <g>
+      <path d="M 80 286 L 112 168" stroke="#ef4444" stroke-width="2.4" stroke-dasharray="6 6" fill="none"/>
+      <circle cx="80" cy="286" r="7.5" fill="#ef4444" stroke="#ffffff" stroke-width="3"/>
+      <rect x="94" y="112" width="146" height="56" rx="8" fill="#fff5f5" stroke="#fecaca"/>
+      <text x="110" y="135" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="15" font-weight="700" fill="#b91c1c">local secret</text>
+      <text x="110" y="155" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="13" fill="#7f1d1d">c<tspan baseline-shift="sub" font-size="9">2,0</tspan> = sk<tspan baseline-shift="sub" font-size="9">2</tspan></text>
+    </g>
+
+    <!-- Share points -->
+    <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+      <g>
+        <line x1="220" y1="350" x2="220" y2="220" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="5 6"/>
+        <circle cx="220" cy="220" r="8.5" fill="#0f766e" stroke="#ffffff" stroke-width="3"/>
+        <text x="184" y="203" font-size="14" font-weight="700" fill="#0f766e">f<tspan baseline-shift="sub" font-size="10">2</tspan>(x<tspan baseline-shift="sub" font-size="10">1</tspan>)</text>
+        <text x="174" y="407" font-size="14" font-weight="700" fill="#0f766e">participant 1</text>
+      </g>
+
+      <g>
+        <line x1="360" y1="350" x2="360" y2="230" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="5 6"/>
+        <circle cx="360" cy="230" r="8.5" fill="#0f766e" stroke="#ffffff" stroke-width="3"/>
+        <text x="324" y="213" font-size="14" font-weight="700" fill="#0f766e">f<tspan baseline-shift="sub" font-size="10">2</tspan>(x<tspan baseline-shift="sub" font-size="10">2</tspan>)</text>
+        <text x="314" y="407" font-size="14" font-weight="700" fill="#0f766e">participant 2</text>
+      </g>
+
+      <g>
+        <line x1="500" y1="350" x2="500" y2="244" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="5 6"/>
+        <circle cx="500" cy="244" r="8.5" fill="#0f766e" stroke="#ffffff" stroke-width="3"/>
+        <text x="464" y="227" font-size="14" font-weight="700" fill="#0f766e">f<tspan baseline-shift="sub" font-size="10">2</tspan>(x<tspan baseline-shift="sub" font-size="10">3</tspan>)</text>
+        <text x="454" y="407" font-size="14" font-weight="700" fill="#0f766e">participant 3</text>
+      </g>
+    </g>
+
+    <!-- Formula label -->
+    <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+      <rect x="394" y="62" width="292" height="86" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+      <text x="410" y="92" font-size="17" font-weight="700" fill="#1d4ed8">participant 2 polynomial</text>
+      <g fill="#1e3a8a">
+        <text x="410" y="125" font-size="16">f<tspan baseline-shift="sub" font-size="12">2</tspan>(x) =</text>
+        <text x="485" y="105" font-size="12" font-weight="700" text-anchor="middle">t</text>
+        <text x="485" y="128" font-size="34" text-anchor="middle">∑</text>
+        <text x="485" y="142" font-size="12" font-weight="700" text-anchor="middle">j=0</text>
+        <text x="500" y="125" font-size="16">c<tspan baseline-shift="sub" font-size="12">2,j</tspan>x<tspan baseline-shift="super" font-size="12">j</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>
