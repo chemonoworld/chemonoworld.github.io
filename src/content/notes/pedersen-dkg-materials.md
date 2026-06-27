@@ -3,6 +3,7 @@ title: "Pedersen DKG Materials"
 description: "Polynomial diagrams for explaining how each participant samples a local contribution polynomial in Pedersen DKG."
 pubDate: 2026-06-23
 category: "Memo"
+heroImage: "/materials/pedersen-dkg/dkg-final-shares.png"
 tags: ["pedersen-dkg", "dkg", "threshold-cryptography", "cryptography"]
 ---
 

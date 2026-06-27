@@ -3,6 +3,7 @@ title: "Excalidraw DKG Materials"
 description: "Distributed Key Generation diagrams with PNG previews and an importable Excalidraw source file."
 pubDate: 2026-06-12
 category: "Memo"
+heroImage: "/materials/excalidraw/dkg/dkg-final-20260612.png"
 tags: ["excalidraw", "dkg", "mpc", "cryptography"]
 ---
 

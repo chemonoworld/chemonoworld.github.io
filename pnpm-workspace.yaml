@@ -1,0 +1,12 @@
+minimumReleaseAge: 1440
+blockExoticSubdeps: true
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+
+overrides:
+  rollup: 4.62.2
+  "picomatch@<2.3.2": 2.3.2
+  "picomatch@>=4.0.0 <4.0.4": 4.0.4
+  "js-yaml@<=4.1.1": 4.2.0

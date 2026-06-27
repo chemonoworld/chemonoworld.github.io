@@ -3,6 +3,7 @@ title: "Pedersen DKG란?"
 description: "Rust 코드로 Pedersen DKG의 라운드 흐름을 따라가며 각 노드가 다항식, commitment, share를 어떻게 다루는지 정리한다."
 pubDate: 2026-06-24
 updatedDate: 2026-06-26
+heroImage: "/materials/pedersen-dkg/dkg-final-shares.png"
 tags: ["cryptography", "mpc", "dkg", "rust", "pedersen-dkg", "threshold-signature-scheme"]
 ---
 

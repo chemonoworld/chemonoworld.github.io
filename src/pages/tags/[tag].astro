@@ -1,0 +1,145 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { SITE_TITLE } from "../../consts";
+import { getTagLabel, slugifyTag, tagPath } from "../../utils/tags";
+
+type TaggedEntry = {
+	title: string;
+	description: string;
+	pubDate: Date;
+	updatedDate?: Date;
+	tags: string[];
+	url: string;
+	kind: "Post" | "Note";
+	category?: string;
+};
+
+export async function getStaticPaths() {
+	const blogPosts = await getCollection("blog");
+	const notes = await getCollection("notes");
+	const allTags = [
+		...new Set([
+			...blogPosts.flatMap((post) => post.data.tags ?? []),
+			...notes.flatMap((note) => note.data.tags ?? []),
+		]),
+	];
+	const paths = new Map<string, { params: { tag: string }; props: unknown }>();
+
+	for (const tag of allTags) {
+		const tagSlug = slugifyTag(tag);
+		const entries: TaggedEntry[] = [
+			...blogPosts.map((post) => ({
+				title: post.data.title,
+				description: post.data.description,
+				pubDate: post.data.pubDate,
+				updatedDate: post.data.updatedDate,
+				tags: post.data.tags ?? [],
+				url: `/blog/${post.id}/`,
+				kind: "Post" as const,
+			})),
+			...notes.map((note) => ({
+				title: note.data.title,
+				description: note.data.description,
+				pubDate: note.data.pubDate,
+				updatedDate: note.data.updatedDate,
+				tags: note.data.tags ?? [],
+				url: `/notes/${note.id}/`,
+				kind: "Note" as const,
+				category: note.data.category,
+			})),
+		]
+			.filter((entry) =>
+				entry.tags.some((entryTag) => slugifyTag(entryTag) === tagSlug),
+			)
+			.sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf());
+
+		if (!paths.has(tagSlug)) {
+			paths.set(tagSlug, {
+				params: { tag: tagSlug },
+				props: {
+					tag,
+					tagLabel: getTagLabel(allTags, tagSlug),
+					entries,
+				},
+			});
+		}
+	}
+
+	return [...paths.values()];
+}
+
+const { tag, tagLabel, entries } = Astro.props;
+const tagSlug = slugifyTag(tag);
+const title = `#${tagLabel} | ${SITE_TITLE}`;
+const description = `Posts and notes tagged with ${tagLabel}.`;
+---
+
+<Layout title={title} description={description}>
+	<section>
+		<div class="mb-8">
+			<p class="text-sm font-medium text-blue-600 mb-2">Tag</p>
+			<h1 class="text-3xl font-bold">#{tagLabel}</h1>
+			<p class="text-gray-600 mt-2">{description}</p>
+		</div>
+
+		<ul class="space-y-8">
+			{
+				entries.map((entry) => (
+					<li class="group">
+						<div class="flex flex-col sm:flex-row gap-4 sm:items-baseline">
+							<time
+								datetime={entry.pubDate.toISOString()}
+								class="text-sm text-gray-500 w-32 shrink-0"
+							>
+								{entry.pubDate.toLocaleDateString("en-us", {
+									year: "numeric",
+									month: "short",
+									day: "numeric",
+								})}
+							</time>
+							<div class="flex-1">
+								<div class="flex flex-wrap items-center gap-2">
+									<span class="text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">
+										{entry.kind}
+									</span>
+									{entry.category && (
+										<span class="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">
+											{entry.category}
+										</span>
+									)}
+									<h2 class="text-xl font-semibold">
+										<a
+											href={entry.url}
+											class="text-gray-900 hover:text-blue-600 transition-colors"
+										>
+											{entry.title}
+										</a>
+									</h2>
+								</div>
+								<p class="text-gray-600 mt-1 line-clamp-2">
+									{entry.description}
+								</p>
+								<div class="flex flex-wrap gap-2 mt-2">
+									{entry.tags.map((entryTag) => (
+											<a
+												href={tagPath(entryTag)}
+												class:list={[
+													"text-xs font-medium transition-colors",
+													slugifyTag(entryTag) === tagSlug
+														? "text-blue-600"
+														: "text-gray-400 hover:text-blue-600",
+												]}
+											>
+												#{entryTag}
+											</a>
+									))}
+								</div>
+							</div>
+						</div>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</Layout>

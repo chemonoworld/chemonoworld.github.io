@@ -1,26 +1,41 @@
 import { defineCollection, z } from "astro:content";
+import { glob } from "astro/loaders";
+
+const contentId = ({ entry }: { entry: string }) =>
+	entry.replace(/\/index\.(md|mdx)$/, "").replace(/\.(md|mdx)$/, "");
 
 const blog = defineCollection({
-	type: 'content',
-	// Type-check frontmatter using a schema
+	loader: glob({
+		pattern: "**/*.{md,mdx}",
+		base: "./src/content/blog",
+		generateId: contentId,
+	}),
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
-		// Transform string to Date object
 		pubDate: z.coerce.date(),
 		updatedDate: z.coerce.date().optional(),
 		heroImage: z.string().optional(),
+		lang: z.enum(["en", "ko"]).optional(),
+		canonicalUrl: z.string().url().optional(),
 		tags: z.array(z.string()).optional(),
 	}),
 });
 
 const notes = defineCollection({
-	type: "content",
+	loader: glob({
+		pattern: "**/*.{md,mdx}",
+		base: "./src/content/notes",
+		generateId: contentId,
+	}),
 	schema: z.object({
 		title: z.string(),
 		description: z.string(),
 		pubDate: z.coerce.date(),
 		updatedDate: z.coerce.date().optional(),
+		heroImage: z.string().optional(),
+		lang: z.enum(["en", "ko"]).optional(),
+		canonicalUrl: z.string().url().optional(),
 		category: z.enum(["TIL", "Tips", "Snippet", "Memo"]).default("Memo"),
 		tags: z.array(z.string()).optional(),
 	}),

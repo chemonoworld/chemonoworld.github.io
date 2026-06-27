@@ -2,6 +2,8 @@
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import { SITE_AUTHOR } from "../consts";
+import { inferLanguage, tagPath } from "../utils/tags";
 
 import type { MarkdownHeading } from "astro";
 
@@ -11,6 +13,8 @@ type Props = {
 	pubDate: Date;
 	updatedDate?: Date;
 	heroImage?: string;
+	lang?: "en" | "ko";
+	canonicalUrl?: string;
 	tags?: string[];
 	category?: string;
 	headings: MarkdownHeading[];
@@ -22,15 +26,54 @@ const {
 	pubDate,
 	updatedDate,
 	heroImage,
+	lang: explicitLang,
+	canonicalUrl,
 	headings,
 	tags,
 	category,
 } = Astro.props;
+
+const lang = explicitLang ?? inferLanguage(title, description);
+const image = heroImage ?? "/blog-placeholder-1.jpg";
+const pageURL = new URL(Astro.url.pathname, Astro.site);
+const imageURL = new URL(image, Astro.site);
+const modifiedDate = updatedDate ?? pubDate;
+const structuredData = {
+	"@context": "https://schema.org",
+	"@type": "BlogPosting",
+	headline: title,
+	description,
+	url: pageURL.toString(),
+	image: [imageURL.toString()],
+	datePublished: pubDate.toISOString(),
+	dateModified: modifiedDate.toISOString(),
+	author: {
+		"@type": "Person",
+		name: SITE_AUTHOR,
+	},
+	publisher: {
+		"@type": "Person",
+		name: SITE_AUTHOR,
+	},
+	keywords: tags?.join(", "),
+	inLanguage: lang,
+};
 ---
 
-<html lang="en" class="h-full">
+<html lang={lang} class="h-full">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead
+			title={title}
+			description={description}
+			image={image}
+			type="article"
+			lang={lang}
+			canonicalUrl={canonicalUrl}
+			publishedTime={pubDate}
+			modifiedTime={modifiedDate}
+			tags={tags}
+			structuredData={structuredData}
+		/>
 	</head>
 
 	<body class="h-full flex flex-col bg-white text-gray-900 antialiased">
@@ -74,25 +117,28 @@ const {
 						{title}
 					</h1>
 					{
-						category && (
-							<div class="flex justify-center mb-4">
-								<span class="text-xs font-semibold text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
-									{category}
-								</span>
-							</div>
-						)
-					}
-					{
-						tags && (
-							<div class="flex flex-wrap justify-center gap-2 mb-8">
-								{tags.map((tag: string) => (
-									<span class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors cursor-default">
-										#{tag}
+							category && (
+								<div class="flex justify-center mb-4">
+									<span class="text-xs font-semibold text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
+										{category}
 									</span>
-								))}
-							</div>
-						)
-					}
+								</div>
+							)
+						}
+						{
+							tags && (
+								<div class="flex flex-wrap justify-center gap-2 mb-8">
+									{tags.map((tag: string) => (
+										<a
+											href={tagPath(tag)}
+											class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors"
+										>
+											#{tag}
+										</a>
+									))}
+								</div>
+							)
+						}
 					{
 						heroImage && (
 							<img

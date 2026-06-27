@@ -7,15 +7,16 @@ interface Props {
 	title: string;
 	description: string;
 	image?: string;
+	lang?: "en" | "ko";
 }
 
-const { title, description, image } = Astro.props;
+const { title, description, image, lang = "en" } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="h-full">
+<html lang={lang} class="h-full">
 	<head>
-		<BaseHead title={title} description={description} image={image} />
+		<BaseHead title={title} description={description} image={image} lang={lang} />
 	</head>
 	<body class="h-full flex flex-col bg-white text-gray-900 antialiased">
 		<Header />

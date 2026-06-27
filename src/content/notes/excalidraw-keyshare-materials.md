@@ -4,6 +4,7 @@ description: "Updated MPC key share split, reshare, and combine diagrams with PN
 pubDate: 2026-06-11
 updatedDate: 2026-06-11
 category: "Memo"
+heroImage: "/materials/excalidraw/split-combine-reshare/combine-20260611-2.png"
 tags: ["excalidraw", "mpc", "cryptography"]
 ---
 
