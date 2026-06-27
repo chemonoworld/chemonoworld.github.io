@@ -2,7 +2,7 @@
 title: "Pedersen DKG란?"
 description: "Rust 코드로 Pedersen DKG의 라운드 흐름을 따라가며 각 노드가 다항식, commitment, share를 어떻게 다루는지 정리한다."
 pubDate: 2026-06-24
-updatedDate: 2026-06-26
+updatedDate: 2026-06-27
 heroImage: "/materials/pedersen-dkg/dkg-final-shares.png"
 tags: ["cryptography", "mpc", "dkg", "rust", "pedersen-dkg", "threshold-signature-scheme"]
 ---
@@ -168,7 +168,7 @@ pub fn broadcast_commitments_local(&mut self) -> Result<(), String> {
 
 다음 라운드에서는 모든 참여자가 자기 다항식을 각 참여자 id에서 평가하고, 수신자별 share를 보낸다. 실제 프로토콜이라면 이 share는 private channel이나 encryption으로 보호되어야 한다. 여기서는 같은 흐름을 로컬 `Round2Payload`로만 흉내낸다.
 
-![DKG nodes commit, verify, and exchange shares](/materials/pedersen-dkg/dkg-step2.svg)
+![DKG nodes commit, verify, and exchange shares](/materials/pedersen-dkg/dkg-step2.png)
 
 ```rust
 pub fn evaluate_each_polynomial(&self) -> Result<Vec<Round2Payload>, String> {
