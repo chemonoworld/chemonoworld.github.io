@@ -2,9 +2,10 @@
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { SITE_TITLE } from "../../consts";
+import { isPublished } from "../../utils/content";
 import { tagPath } from "../../utils/tags";
 
-const notes = (await getCollection("notes")).sort(
+const notes = (await getCollection("notes")).filter(isPublished).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 

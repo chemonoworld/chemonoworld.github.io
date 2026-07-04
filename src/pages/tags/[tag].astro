@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { SITE_TITLE } from "../../consts";
+import { isPublished } from "../../utils/content";
 import { getTagLabel, slugifyTag, tagPath } from "../../utils/tags";
 
 type TaggedEntry = {
@@ -16,8 +17,8 @@ type TaggedEntry = {
 };
 
 export async function getStaticPaths() {
-	const blogPosts = await getCollection("blog");
-	const notes = await getCollection("notes");
+	const blogPosts = (await getCollection("blog")).filter(isPublished);
+	const notes = (await getCollection("notes")).filter(isPublished);
 	const allTags = [
 		...new Set([
 			...blogPosts.flatMap((post) => post.data.tags ?? []),

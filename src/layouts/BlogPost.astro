@@ -2,7 +2,7 @@
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { SITE_AUTHOR } from "../consts";
+import { SITE_AUTHOR, SITE_NAME } from "../consts";
 import { inferLanguage, tagPath } from "../utils/tags";
 
 import type { MarkdownHeading } from "astro";
@@ -13,10 +13,12 @@ type Props = {
 	pubDate: Date;
 	updatedDate?: Date;
 	heroImage?: string;
+	heroImageAlt?: string;
 	lang?: "en" | "ko";
 	canonicalUrl?: string;
 	tags?: string[];
 	category?: string;
+	collection?: "blog" | "notes";
 	headings: MarkdownHeading[];
 };
 
@@ -26,24 +28,37 @@ const {
 	pubDate,
 	updatedDate,
 	heroImage,
+	heroImageAlt,
 	lang: explicitLang,
 	canonicalUrl,
 	headings,
 	tags,
 	category,
+	collection = "blog",
 } = Astro.props;
 
 const lang = explicitLang ?? inferLanguage(title, description);
 const image = heroImage ?? "/blog-placeholder-1.jpg";
 const pageURL = new URL(Astro.url.pathname, Astro.site);
-const imageURL = new URL(image, Astro.site);
+const canonicalURL = new URL(canonicalUrl ?? Astro.url.pathname, Astro.site);
+const imageBaseURL = image.startsWith("./") || image.startsWith("../") ? pageURL : Astro.site;
+const imageURL = new URL(image, imageBaseURL);
+const siteURL = new URL("/", Astro.site);
 const modifiedDate = updatedDate ?? pubDate;
-const structuredData = {
+const seoTitle = `${title} | ${SITE_NAME}`;
+const collectionURL = new URL(collection === "notes" ? "/notes/" : "/", Astro.site);
+const imageAlt = heroImageAlt ?? title;
+const articleStructuredData = {
 	"@context": "https://schema.org",
 	"@type": "BlogPosting",
+	"@id": `${canonicalURL.toString()}#article`,
+	mainEntityOfPage: {
+		"@type": "WebPage",
+		"@id": canonicalURL.toString(),
+	},
 	headline: title,
 	description,
-	url: pageURL.toString(),
+	url: canonicalURL.toString(),
 	image: [imageURL.toString()],
 	datePublished: pubDate.toISOString(),
 	dateModified: modifiedDate.toISOString(),
@@ -54,24 +69,64 @@ const structuredData = {
 	publisher: {
 		"@type": "Person",
 		name: SITE_AUTHOR,
+		url: siteURL.toString(),
+	},
+	isPartOf: {
+		"@type": "WebSite",
+		name: SITE_NAME,
+		url: siteURL.toString(),
 	},
 	keywords: tags?.join(", "),
+	articleSection: category,
 	inLanguage: lang,
 };
+const breadcrumbItems = [
+	{
+		"@type": "ListItem",
+		position: 1,
+		name: SITE_NAME,
+		item: siteURL.toString(),
+	},
+	...(collection === "notes"
+		? [
+			{
+				"@type": "ListItem",
+				position: 2,
+				name: "Notes",
+				item: collectionURL.toString(),
+			},
+		]
+		: []),
+	{
+		"@type": "ListItem",
+		position: collection === "notes" ? 3 : 2,
+		name: title,
+		item: canonicalURL.toString(),
+	},
+];
+const breadcrumbStructuredData = {
+	"@context": "https://schema.org",
+	"@type": "BreadcrumbList",
+	itemListElement: breadcrumbItems,
+};
+const structuredData = [articleStructuredData, breadcrumbStructuredData];
 ---
 
+<!doctype html>
 <html lang={lang} class="h-full">
 	<head>
 		<BaseHead
-			title={title}
+			title={seoTitle}
 			description={description}
 			image={image}
+			imageAlt={imageAlt}
 			type="article"
 			lang={lang}
-			canonicalUrl={canonicalUrl}
+			canonicalUrl={canonicalURL.toString()}
 			publishedTime={pubDate}
 			modifiedTime={modifiedDate}
 			tags={tags}
+			section={category}
 			structuredData={structuredData}
 		/>
 	</head>
@@ -145,7 +200,9 @@ const structuredData = {
 								width={1020}
 								height={510}
 								src={heroImage}
-								alt=""
+								alt={imageAlt}
+								loading="eager"
+								decoding="async"
 								class="rounded-xl shadow-lg w-full h-auto"
 							/>
 						)

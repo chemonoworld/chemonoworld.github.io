@@ -8,15 +8,24 @@ interface Props {
 	description: string;
 	image?: string;
 	lang?: "en" | "ko";
+	canonicalUrl?: string;
+	structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
-const { title, description, image, lang = "en" } = Astro.props;
+const { title, description, image, lang = "en", canonicalUrl, structuredData } = Astro.props;
 ---
 
 <!doctype html>
 <html lang={lang} class="h-full">
 	<head>
-		<BaseHead title={title} description={description} image={image} lang={lang} />
+		<BaseHead
+			title={title}
+			description={description}
+			image={image}
+			lang={lang}
+			canonicalUrl={canonicalUrl}
+			structuredData={structuredData}
+		/>
 	</head>
 	<body class="h-full flex flex-col bg-white text-gray-900 antialiased">
 		<Header />

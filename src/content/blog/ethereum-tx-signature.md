@@ -5,9 +5,9 @@ pubDate: 'Aug 02 2024'
 tags: ['ethereum', 'blockchain', 'cryptography', 'golang']
 ---
 
-# Tx type별 특징
+## Tx type별 특징
 
-## 1. LegacyTx(EIP-155)
+### 1. LegacyTx(EIP-155)
 
 - 구조: nonce, gasPrice, gasLimit, to, value, data, v, r, s
 - 특징:
@@ -35,7 +35,7 @@ rlp([nonce, gasPrice, gasLimit, to, value, data, v, r, s])
 
 https://github.com/ethereum/EIPs/blob/master/EIPS/eip-155.md
 
-## 2. AccessListTx(EIP-2930)
+### 2. AccessListTx(EIP-2930)
 
 - LegacyTx의 모든 필드를 포함하며, 추가로 accessList 필드가 추가됨
 - 특징:
@@ -64,7 +64,7 @@ type AccessListTx struct {
 0x01 || rlp([chainId, nonce, gasPrice, gasLimit, to, value, data, accessList, signatureYParity, signatureR, signatureS])
 ```
 
-## 3. DynamicFeeTx(EIP-1559)
+### 3. DynamicFeeTx(EIP-1559)
 
 - 구조: 기존 필드 + maxFeePerGas, maxPriorityFeePerGas (gasPrice 대체)
 - 특징:
@@ -97,7 +97,7 @@ type DynamicFeeTx struct {
 0x02 || rlp([chainId, nonce, maxPriorityFeePerGas, maxFeePerGas, gasLimit, to, value, data, accessList, signatureYParity, signatureR, signatureS])
 ```
 
-## 4. BlobTx(EIP-4844)
+### 4. BlobTx(EIP-4844)
 
 EIP-4844는 "Shard Blob Transactions"라는 제목으로 제안됨. (Proto-Danksharding)
 
@@ -160,7 +160,7 @@ type BlobTx struct {
 ])
 ```
 
-## 5. Transaction 구조 및 tx RLP encoding 코드
+### 5. Transaction 구조 및 tx RLP encoding 코드
 
 - Transaction 구조
 
@@ -237,17 +237,17 @@ func prefixedRlpHash(prefix byte, x interface{}) (h common.Hash) {
 }
 ```
 
-# ECDSA ecrecover 기능
+## ECDSA ecrecover 기능
 
-## 1. 비대칭키 암호화 서명의 검증
+### 1. 비대칭키 암호화 서명의 검증
 
 - signature 생성의 경우 개인키와, 메시지(hash)를 통해 생성
 - verify method의 경우 일반적으로 공개키와, 메시지(hash), signature의 3개의 parameter가 필요
 - EdDSA(Edwards-Curve Digital Signature Algorithm; ed25519 or ed488) 또는 Schnorrkel/Ristretto x25519(sr25519)와 달리 ECDSA(secp256k1)는 recoverPubkey or ecrecover와 같이 signature와 메시지(hash)로부터 pubkey를 복구하는 기능을 지원
 
-## 2. 코드를 통해 확인하기
+### 2. 코드를 통해 확인하기
 
-### evmos의 Tx msg
+#### evmos의 Tx msg
 
 - 민트스캔 링크
     - [https://www.mintscan.io/evmos/tx/ce2a75e27a92d7ed26fe89b2eebc713c58eea81f938bd7e84155326bca7ad5af/?height=22460308](https://www.mintscan.io/evmos/tx/ce2a75e27a92d7ed26fe89b2eebc713c58eea81f938bd7e84155326bca7ad5af/?height=22460308)
@@ -294,7 +294,7 @@ func prefixedRlpHash(prefix byte, x interface{}) (h common.Hash) {
     }
 ```
 
-### 코드
+#### 코드
 
 from address: 0x7500A226f292156c63176a89BeA7F95335B4E0e2
 

@@ -4,6 +4,7 @@ description: 'Testing LaTeX rendering in Astro using remark-math and rehype-kate
 pubDate: 'Jul 08 2022'
 heroImage: '/blog-placeholder-1.jpg'
 tags: []
+draft: true
 ---
 
 This post demonstrates **LaTeX** rendering support.

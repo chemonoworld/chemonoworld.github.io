@@ -1,9 +1,10 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
 import BlogPost from "../../layouts/BlogPost.astro";
+import { isPublished } from "../../utils/content";
 
 export async function getStaticPaths() {
-	const notes = await getCollection("notes");
+	const notes = (await getCollection("notes")).filter(isPublished);
 	return notes.map((note) => ({
 		params: { slug: note.id },
 		props: note,
@@ -15,6 +16,6 @@ const note = Astro.props;
 const { Content, headings } = await render(note);
 ---
 
-<BlogPost {...note.data} headings={headings}>
+<BlogPost {...note.data} collection="notes" headings={headings}>
 	<Content />
 </BlogPost>
